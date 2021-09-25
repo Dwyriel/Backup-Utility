@@ -36,6 +36,8 @@ namespace Savefiles_Backup_Utility
             this.backupFolderTxtBox = new System.Windows.Forms.TextBox();
             this.backupFolderLabel = new System.Windows.Forms.Label();
             this.backupFolderSearchBtn = new System.Windows.Forms.Button();
+            this.BackupBtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // presetComboBox
@@ -106,16 +108,40 @@ namespace Savefiles_Backup_Utility
             this.backupFolderSearchBtn.Location = new System.Drawing.Point(334, 90);
             this.backupFolderSearchBtn.Name = "backupFolderSearchBtn";
             this.backupFolderSearchBtn.Size = new System.Drawing.Size(68, 27);
-            this.backupFolderSearchBtn.TabIndex = 602;
+            this.backupFolderSearchBtn.TabIndex = 4;
             this.backupFolderSearchBtn.Text = "Search";
             this.backupFolderSearchBtn.UseVisualStyleBackColor = true;
             this.backupFolderSearchBtn.Click += new System.EventHandler(this.backupFolderSearchBtn_Click);
+            // 
+            // BackupBtn
+            // 
+            this.BackupBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BackupBtn.Location = new System.Drawing.Point(16, 133);
+            this.BackupBtn.Name = "BackupBtn";
+            this.BackupBtn.Size = new System.Drawing.Size(87, 32);
+            this.BackupBtn.TabIndex = 5;
+            this.BackupBtn.Text = "Backup!";
+            this.BackupBtn.UseVisualStyleBackColor = true;
+            this.BackupBtn.Click += new System.EventHandler(this.BackupBtn_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(334, 133);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(68, 32);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Files";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 450);
+            this.ClientSize = new System.Drawing.Size(415, 175);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.BackupBtn);
             this.Controls.Add(this.backupFolderSearchBtn);
             this.Controls.Add(this.backupFolderLabel);
             this.Controls.Add(this.backupFolderTxtBox);
@@ -141,6 +167,8 @@ namespace Savefiles_Backup_Utility
         private System.Windows.Forms.TextBox backupFolderTxtBox;
         private System.Windows.Forms.Label backupFolderLabel;
         private System.Windows.Forms.Button backupFolderSearchBtn;
+        private System.Windows.Forms.Button BackupBtn;
+        private System.Windows.Forms.Button button1;
     }
 }
 

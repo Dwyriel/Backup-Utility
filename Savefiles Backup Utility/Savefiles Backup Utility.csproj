@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\CustomFolderPicker.cs" />
     <Compile Include="src\ErrorLogger.cs" />
     <Compile Include="src\Preset.cs" />
     <EmbeddedResource Include="InputForm.resx">

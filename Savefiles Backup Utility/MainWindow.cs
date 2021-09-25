@@ -63,6 +63,8 @@ namespace Savefiles_Backup_Utility
             SetStartLocation();
             SetBackupFolderStartingValue();
             SetPresetsComboBox();
+
+            BackupBtn.Select();
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
@@ -120,6 +122,32 @@ namespace Savefiles_Backup_Utility
         }
 
         private void backupFolderSearchBtn_Click(object sender, EventArgs e)
+        {
+            CustomFolderPicker customFolderPicker = new CustomFolderPicker() { Title = "Select Backup Folder" };
+            customFolderPicker.ShowDialog(Handle);
+            string resultPath = customFolderPicker.ResultPath;
+            if (resultPath is null)
+                return;
+            if (!Directory.Exists(resultPath))
+            {
+                MessageBox.Show("Must be a valid folder path", "Invalid path");
+                return;
+            }
+            backupFolderTxtBox.Text = resultPath;
+            PresetManager.ConfigAndPresets.BackupFolderPath = resultPath;
+            PresetManager.Save();
+        }
+        #endregion
+
+        #region Files:
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region Backup:
+        private void BackupBtn_Click(object sender, EventArgs e)
         {
 
         }
