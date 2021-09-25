@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +16,6 @@ namespace Savefiles_Backup_Utility
         #region Constroctor:
         public MainWindow()
         {
-            PresetManager.Initialize();
             InitializeComponent();
             SetStartAttributes();
         }
@@ -33,24 +33,46 @@ namespace Savefiles_Backup_Utility
         private void SetPresetsComboBox()
         {
             presetComboBox.Items.Clear();
-            foreach (Preset preset in PresetManager.ConfigAndPresets.presets)
-                presetComboBox.Items.Add(preset.presetName);
+            foreach (Preset preset in PresetManager.ConfigAndPresets.Presets)
+                presetComboBox.Items.Add(preset.PresetName);
             if (presetComboBox.Items.Count > 0)
-                presetComboBox.SelectedIndex = PresetManager.ConfigAndPresets.currentPresetIndex;
+                presetComboBox.SelectedIndex = PresetManager.ConfigAndPresets.CurrentPresetIndex;
+        }
+
+        private void SetStartLocation()
+        {
+            if (PresetManager.ConfigAndPresets.FirstTime)
+            {
+                PresetManager.ConfigAndPresets.FirstTime = false;
+                return;
+            }
+            Location = PresetManager.ConfigAndPresets.StartLocation;
+        }
+
+        private void SetBackupFolderStartingValue()
+        {
+            backupFolderTxtBox.Text = PresetManager.ConfigAndPresets.BackupFolderPath ?? "";
         }
         #endregion
 
         #region Events:
+        #region Form Events:
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            PresetManager.Initialize();
+            SetStartLocation();
+            SetBackupFolderStartingValue();
             SetPresetsComboBox();
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            PresetManager.ConfigAndPresets.StartLocation = Location;
             PresetManager.Save();
         }
+        #endregion
 
+        #region Preset Events:
         private void newPresetBtn_Click(object sender, EventArgs e)
         {
             InputForm inputForm = new InputForm() { description = "Name your new Preset:", title = "Preset" };
@@ -70,6 +92,7 @@ namespace Savefiles_Backup_Utility
                 return;
             PresetManager.RemovePresetAtCurrentIndex();
             SetPresetsComboBox();
+            PresetManager.Save();
         }
 
         private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -79,9 +102,28 @@ namespace Savefiles_Backup_Utility
         }
         #endregion
 
+        #region Backup Folder Events:
+        private void backupFolderTxtBox_Leave(object sender, EventArgs e)
+        {
+            if (backupFolderTxtBox.Text is null || backupFolderTxtBox.Text == "")
+            {
+                PresetManager.ConfigAndPresets.BackupFolderPath = backupFolderTxtBox.Text;
+                return;
+            }
+            if (!Directory.Exists(backupFolderTxtBox.Text))
+            {
+                MessageBox.Show("Must be a valid folder path", "Invalid path");
+                backupFolderTxtBox.Focus();
+                return;
+            }
+            PresetManager.ConfigAndPresets.BackupFolderPath = backupFolderTxtBox.Text;
+        }
+
         private void backupFolderSearchBtn_Click(object sender, EventArgs e)
         {
 
         }
+        #endregion
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
@@ -9,13 +10,13 @@ namespace Savefiles_Backup_Utility
     static class PresetManager
     {
         #region Private Attributes:
-        private static readonly string presetsFileName = "SFBU_Config.xml";
+        private static readonly string ConfigAndPresetsFileName = "SFBU_Config.xml";
         private static DirectoryInfo currentDir;
-        private static string presetFilePath;
+        private static string configAndPresetsFilePath;
         #endregion
 
         #region Public Attributes:
-        public static Preset CurrentPreset { get { return ConfigAndPresets.presets[ConfigAndPresets.currentPresetIndex]; } set { ConfigAndPresets.presets[ConfigAndPresets.currentPresetIndex] = value; } }
+        public static Preset CurrentPreset { get { return ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex]; } set { ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex] = value; } }
         public static ConfigAndPresets ConfigAndPresets;
         #endregion
 
@@ -23,9 +24,9 @@ namespace Savefiles_Backup_Utility
         public static void Initialize()
         {
             currentDir = new DirectoryInfo(Path.GetDirectoryName(Application.ExecutablePath));
-            presetFilePath = currentDir.FullName + @"\" + presetsFileName;
+            configAndPresetsFilePath = currentDir.FullName + @"\" + ConfigAndPresetsFileName;
             bool loaded = false;
-            if (File.Exists(presetFilePath))
+            if (File.Exists(configAndPresetsFilePath))
                 loaded = Load();
             if (loaded)
                 return;
@@ -35,7 +36,7 @@ namespace Savefiles_Backup_Utility
         public static bool Load()
         {
             XmlSerializer format = new XmlSerializer(typeof(ConfigAndPresets));
-            FileStream inFile = new FileStream(presetFilePath, FileMode.Open);
+            FileStream inFile = new FileStream(configAndPresetsFilePath, FileMode.Open);
             try
             {
                 byte[] buffer = new byte[inFile.Length];
@@ -46,7 +47,7 @@ namespace Savefiles_Backup_Utility
             }
             catch (Exception e)
             {
-                ErrorLogger.ShowErrorTextWithExceptionMessage($"An error occurred while reading {presetsFileName}, check {ErrorLogger.ErrorLogFileName} file.", e, true);
+                ErrorLogger.ShowErrorTextWithExceptionMessage($"An error occurred while reading {ConfigAndPresetsFileName}, check {ErrorLogger.ErrorLogFileName} file.", e, true);
                 return false;
             }
             finally
@@ -57,7 +58,7 @@ namespace Savefiles_Backup_Utility
 
         public static void Save()
         {
-            FileStream outFile = File.Create(presetFilePath);
+            FileStream outFile = File.Create(configAndPresetsFilePath);
             try
             {
                 XmlSerializer format = new XmlSerializer(typeof(ConfigAndPresets));
@@ -75,11 +76,11 @@ namespace Savefiles_Backup_Utility
 
         public static void SetCurrentIndex(string presetName)
         {
-            for (int i = 0; i < ConfigAndPresets.presets.Count; i++)
+            for (int i = 0; i < ConfigAndPresets.Presets.Count; i++)
             {
-                if (ConfigAndPresets.presets[i].presetName == presetName)
+                if (ConfigAndPresets.Presets[i].PresetName == presetName)
                 {
-                    ConfigAndPresets.currentPresetIndex = i;
+                    ConfigAndPresets.CurrentPresetIndex = i;
                     return;
                 }
             }
@@ -87,31 +88,33 @@ namespace Savefiles_Backup_Utility
 
         public static void AddNewPreset(string presetName)
         {
-            ConfigAndPresets.presets.Add(new Preset() { presetName = presetName });
-            ConfigAndPresets.currentPresetIndex = ConfigAndPresets.presets.Count - 1;
+            ConfigAndPresets.Presets.Add(new Preset() { PresetName = presetName });
+            ConfigAndPresets.CurrentPresetIndex = ConfigAndPresets.Presets.Count - 1;
         }
 
         public static void RemovePresetAtCurrentIndex()
         {
-            if (ConfigAndPresets.presets.Count < 1)
+            if (ConfigAndPresets.Presets.Count < 1)
                 return;
-            ConfigAndPresets.presets.RemoveAt(ConfigAndPresets.currentPresetIndex);
-            ConfigAndPresets.currentPresetIndex = 0;
+            ConfigAndPresets.Presets.RemoveAt(ConfigAndPresets.CurrentPresetIndex);
+            ConfigAndPresets.CurrentPresetIndex = 0;
         }
         #endregion
     }
 
     public class ConfigAndPresets
     {
-        public List<Preset> presets = new List<Preset>();
-        public string backupFolderPath = "";
-        public int currentPresetIndex = 0;
+        public bool FirstTime = true;
+        public Point StartLocation;
+        public string BackupFolderPath = "";
+        public int CurrentPresetIndex = 0;
+        public List<Preset> Presets = new List<Preset>();
     }
 
     public class Preset
     {
-        public string presetName;
-        public List<string> filesToSave = new List<string>();
-        public ulong backupNumber = 0;
+        public string PresetName;
+        public ulong BackupNumber = 0;
+        public List<string> FilesToSave = new List<string>();
     }
 }

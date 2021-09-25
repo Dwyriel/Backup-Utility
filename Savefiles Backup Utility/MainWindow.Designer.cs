@@ -88,6 +88,7 @@ namespace Savefiles_Backup_Utility
             this.backupFolderTxtBox.Name = "backupFolderTxtBox";
             this.backupFolderTxtBox.Size = new System.Drawing.Size(301, 23);
             this.backupFolderTxtBox.TabIndex = 3;
+            this.backupFolderTxtBox.Leave += new System.EventHandler(this.backupFolderTxtBox_Leave);
             // 
             // backupFolderLabel
             // 
@@ -102,9 +103,9 @@ namespace Savefiles_Backup_Utility
             // backupFolderSearchBtn
             // 
             this.backupFolderSearchBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.backupFolderSearchBtn.Location = new System.Drawing.Point(334, 92);
+            this.backupFolderSearchBtn.Location = new System.Drawing.Point(334, 90);
             this.backupFolderSearchBtn.Name = "backupFolderSearchBtn";
-            this.backupFolderSearchBtn.Size = new System.Drawing.Size(68, 26);
+            this.backupFolderSearchBtn.Size = new System.Drawing.Size(68, 27);
             this.backupFolderSearchBtn.TabIndex = 602;
             this.backupFolderSearchBtn.Text = "Search";
             this.backupFolderSearchBtn.UseVisualStyleBackColor = true;
@@ -114,7 +115,7 @@ namespace Savefiles_Backup_Utility
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(421, 450);
             this.Controls.Add(this.backupFolderSearchBtn);
             this.Controls.Add(this.backupFolderLabel);
             this.Controls.Add(this.backupFolderTxtBox);
