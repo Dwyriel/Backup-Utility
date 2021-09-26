@@ -24,13 +24,13 @@ namespace Savefiles_Backup_Utility
         private void ShowFiles()
         {
             FilesListBox.Items.Clear();
-            foreach (string file in FileManager.FilePaths)
+            foreach (string file in FileManager.FilesToSave)
                 FilesListBox.Items.Add(file);
         }
 
         private void SetButtonsState()
         {
-            bool shouldEnable = FileManager.FilePaths.Count > 0;
+            bool shouldEnable = FileManager.FilesToSave.Count > 0;
             RemoveBtn.Enabled = shouldEnable;
             ClearBtn.Enabled = shouldEnable;
         }
@@ -53,7 +53,7 @@ namespace Savefiles_Backup_Utility
             foreach (string selectedFile in selectedFiles)
             {
                 bool shouldAdd = true;
-                foreach (string filePath in FileManager.FilePaths)
+                foreach (string filePath in FileManager.FilesToSave)
                     if (selectedFile == filePath)
                         shouldAdd = false;
                 if (shouldAdd)

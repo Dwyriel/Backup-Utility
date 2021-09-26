@@ -10,7 +10,7 @@ namespace Savefiles_Backup_Utility
     static class PresetManager
     {
         #region Private Attributes:
-        private static readonly string ConfigAndPresetsFileName = "SFBU_Config.xml";
+        private static readonly string ConfigAndPresetsFileName = "Savefiles Backup Utility.ini";
         private static DirectoryInfo currentDir;
         private static string configAndPresetsFilePath;
         #endregion
@@ -58,7 +58,7 @@ namespace Savefiles_Backup_Utility
                     string deletedFiles = Environment.NewLine + Environment.NewLine + "Deleted Files:";
                     foreach (string file in deletedFilePaths)
                         deletedFiles += Environment.NewLine + file;
-                    ErrorLogger.ShowErrorText($"One or more files in '{preset.PresetName}' preset don't exist or were deleted" + deletedFiles, true);
+                    ErrorLogger.ShowErrorText($"One or more files in '{preset.PresetName}' preset don't exist or were deleted and were removed from the list" + deletedFiles, true);
                     preset.FilesToSave = newFilePathList;
                 }
             }
@@ -130,6 +130,13 @@ namespace Savefiles_Backup_Utility
             ConfigAndPresets.Presets.RemoveAt(ConfigAndPresets.CurrentPresetIndex);
             ConfigAndPresets.CurrentPresetIndex = 0;
         }
+
+        public static bool CheckIfNameIsValid(string name)
+        {
+            if (name.Contains(@"\") || name.Contains(@"/") || name.Contains(@":") || name.Contains(@"*") || name.Contains(@"?") || name.Contains('"'.ToString()) || name.Contains(@"<") || name.Contains(@">") || name.Contains(@"|"))
+                return false;
+            return true;
+        }
         #endregion
     }
 
@@ -145,7 +152,7 @@ namespace Savefiles_Backup_Utility
     public class Preset
     {
         public string PresetName;
-        public uint BackupNumber = 0;
+        public uint BackupNumber = 1;
         public List<string> FilesToSave = new List<string>();
     }
 }

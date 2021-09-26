@@ -38,6 +38,7 @@ namespace Savefiles_Backup_Utility
             this.backupFolderSearchBtn = new System.Windows.Forms.Button();
             this.BackupBtn = new System.Windows.Forms.Button();
             this.FilesBtn = new System.Windows.Forms.Button();
+            this.StatusLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // presetComboBox
@@ -135,11 +136,23 @@ namespace Savefiles_Backup_Utility
             this.FilesBtn.UseVisualStyleBackColor = true;
             this.FilesBtn.Click += new System.EventHandler(this.FilesBtn_Click);
             // 
+            // StatusLabel
+            // 
+            this.StatusLabel.AutoSize = true;
+            this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusLabel.Location = new System.Drawing.Point(109, 136);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(66, 24);
+            this.StatusLabel.TabIndex = 602;
+            this.StatusLabel.Text = "Status";
+            this.StatusLabel.Visible = false;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(415, 175);
+            this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.FilesBtn);
             this.Controls.Add(this.BackupBtn);
             this.Controls.Add(this.backupFolderSearchBtn);
@@ -169,6 +182,7 @@ namespace Savefiles_Backup_Utility
         private System.Windows.Forms.Button backupFolderSearchBtn;
         private System.Windows.Forms.Button BackupBtn;
         private System.Windows.Forms.Button FilesBtn;
+        private System.Windows.Forms.Label StatusLabel;
     }
 }
 

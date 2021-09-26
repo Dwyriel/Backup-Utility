@@ -6,6 +6,8 @@ namespace Savefiles_Backup_Utility
 {
     public partial class MainWindow : Form
     {
+        Timer timer = null;
+
         #region Constroctor:
         public MainWindow()
         {
@@ -51,6 +53,41 @@ namespace Savefiles_Backup_Utility
         {
             FilesBtn.Enabled = PresetManager.ConfigAndPresets.Presets.Count > 0;
         }
+
+        private bool CheckBackupFolder()
+        {
+            if (PresetManager.ConfigAndPresets.BackupFolderPath == "" || PresetManager.ConfigAndPresets.BackupFolderPath is null)
+            {
+                MessageBox.Show("Backup folder can't be empty.", "Invalid Backup Folder");
+                return false;
+            }
+            if (!Directory.Exists(PresetManager.ConfigAndPresets.BackupFolderPath))
+            {
+                MessageBox.Show("Backup Folder must be a valid folder path", "Invalid Backup Folder");
+                return false;
+            }
+            return true;
+        }
+
+        private void ShowStatusLabel(string status)
+        {
+            StatusLabel.Text = status;
+            StatusLabel.Visible = true;
+        }
+
+        private void HideStatusLabelTimer(string status)
+        {
+            StatusLabel.Text = status;
+            if (timer is null)
+            {
+                timer = new Timer();
+                timer.Tick += Timer_Tick;
+            }
+            if (timer.Enabled)
+                timer.Stop();
+            timer.Interval = 5000;
+            timer.Start();
+        }
         #endregion
 
         #region Events:
@@ -79,10 +116,15 @@ namespace Savefiles_Backup_Utility
             inputForm.ShowDialog(this);
             if (inputForm.DialogResult != DialogResult.OK)
                 return;
+            if (!PresetManager.CheckIfNameIsValid(inputForm.Input))
+            {
+                MessageBox.Show(@"Preset name cannot contain any of the following characters: \ / : * ? " + '"' + " < > | ", "Invalid Name");
+                return;
+            }
             PresetManager.AddNewPreset(inputForm.Input);
+            inputForm.Dispose();
             SetPresetsComboBox();
             PresetManager.Save();
-            inputForm.Dispose();
             CheckForPreset();
         }
 
@@ -149,7 +191,30 @@ namespace Savefiles_Backup_Utility
         #region Backup:
         private void BackupBtn_Click(object sender, EventArgs e)
         {
+            ShowStatusLabel("Working on it..");
+            if (!CheckBackupFolder())
+            {
+                HideStatusLabelTimer("Failed");
+                return;
+            }
+            if(FileManager.FilesToSave.Count< 1)
+            {
+                MessageBox.Show("No files to backup, Select files first");
+                HideStatusLabelTimer("Failed");
+                return;
+            }
+            if (!FileManager.Backup())
+            {
+                HideStatusLabelTimer("Failed");
+                return;
+            }
+            HideStatusLabelTimer("Done!");
+        }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            StatusLabel.Visible = false;
+            timer.Stop();
         }
         #endregion
         #endregion
