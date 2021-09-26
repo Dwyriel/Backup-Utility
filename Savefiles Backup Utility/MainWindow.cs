@@ -22,7 +22,7 @@ namespace Savefiles_Backup_Utility
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
-            //Icon = Properties.Resources.Icon;
+            Icon = Properties.Resources.icon;
         }
 
         private void SetPresetsComboBox()

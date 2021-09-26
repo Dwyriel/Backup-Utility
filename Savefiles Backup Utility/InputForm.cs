@@ -13,6 +13,7 @@ namespace Savefiles_Backup_Utility
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
+            Icon = Properties.Resources.icon;
             InitializeComponent();
         }
 
