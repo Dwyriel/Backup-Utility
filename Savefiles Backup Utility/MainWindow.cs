@@ -1,12 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Savefiles_Backup_Utility
@@ -53,6 +46,11 @@ namespace Savefiles_Backup_Utility
         {
             backupFolderTxtBox.Text = PresetManager.ConfigAndPresets.BackupFolderPath ?? "";
         }
+
+        private void CheckForPreset()
+        {
+            FilesBtn.Enabled = PresetManager.ConfigAndPresets.Presets.Count > 0;
+        }
         #endregion
 
         #region Events:
@@ -63,7 +61,7 @@ namespace Savefiles_Backup_Utility
             SetStartLocation();
             SetBackupFolderStartingValue();
             SetPresetsComboBox();
-
+            CheckForPreset();
             BackupBtn.Select();
         }
 
@@ -85,6 +83,7 @@ namespace Savefiles_Backup_Utility
             SetPresetsComboBox();
             PresetManager.Save();
             inputForm.Dispose();
+            CheckForPreset();
         }
 
         private void deletePresetBtn_Click(object sender, EventArgs e)
@@ -95,12 +94,12 @@ namespace Savefiles_Backup_Utility
             PresetManager.RemovePresetAtCurrentIndex();
             SetPresetsComboBox();
             PresetManager.Save();
+            CheckForPreset();
         }
 
         private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             PresetManager.SetCurrentIndex((string)presetComboBox.SelectedItem);
-            //todo show changed variables to user
         }
         #endregion
 
@@ -140,9 +139,10 @@ namespace Savefiles_Backup_Utility
         #endregion
 
         #region Files:
-        private void button1_Click(object sender, EventArgs e)
+        private void FilesBtn_Click(object sender, EventArgs e)
         {
-
+            Files filesForm = new Files() { Text = $"{PresetManager.CurrentPreset.PresetName} - Files" };
+            filesForm.ShowDialog(this);
         }
         #endregion
 

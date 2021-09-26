@@ -29,8 +29,39 @@ namespace Savefiles_Backup_Utility
             if (File.Exists(configAndPresetsFilePath))
                 loaded = Load();
             if (loaded)
+            {
+                CheckFilesIntegrity();
                 return;
+            }
             ConfigAndPresets = new ConfigAndPresets();
+        }
+
+        public static void CheckFilesIntegrity()
+        {
+            foreach (Preset preset in ConfigAndPresets.Presets)
+            {
+                List<string> newFilePathList = new List<string>();
+                List<string> deletedFilePaths = new List<string>();
+                bool fileDidntExist = false;
+                foreach (string file in preset.FilesToSave)
+                {
+                    if (!File.Exists(file))
+                    {
+                        fileDidntExist = true;
+                        deletedFilePaths.Add(file);
+                        continue;
+                    }
+                    newFilePathList.Add(file);
+                }
+                if (fileDidntExist)
+                {
+                    string deletedFiles = Environment.NewLine + Environment.NewLine + "Deleted Files:";
+                    foreach (string file in deletedFilePaths)
+                        deletedFiles += Environment.NewLine + file;
+                    ErrorLogger.ShowErrorText($"One or more files in '{preset.PresetName}' preset don't exist or were deleted" + deletedFiles, true);
+                    preset.FilesToSave = newFilePathList;
+                }
+            }
         }
 
         public static bool Load()
@@ -114,7 +145,7 @@ namespace Savefiles_Backup_Utility
     public class Preset
     {
         public string PresetName;
-        public ulong BackupNumber = 0;
+        public uint BackupNumber = 0;
         public List<string> FilesToSave = new List<string>();
     }
 }
