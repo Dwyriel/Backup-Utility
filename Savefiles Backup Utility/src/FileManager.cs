@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Xml.Serialization;
 using System.Collections.Generic;
 
 namespace Savefiles_Backup_Utility
 {
     static class FileManager
     {
+        #region Public Attributes:
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
         public static uint BackupNumber { get { return PresetManager.CurrentPreset.BackupNumber; } set { PresetManager.CurrentPreset.BackupNumber = value; } }
+        #endregion
 
+        #region Methods:
         public static void Add(string filePath)
         {
             FilesToSave.Add(filePath);
@@ -85,5 +85,6 @@ namespace Savefiles_Backup_Utility
             DirectoryInfo dir = Directory.CreateDirectory(path);
             return (dir is null || dir.FullName is null) ? null : dir;
         }
+        #endregion
     }
 }
