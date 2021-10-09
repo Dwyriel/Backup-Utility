@@ -8,50 +8,37 @@ namespace Savefiles_Backup_Utility
     {
         #region Public Attributes:
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
+        public static List<string> FoldersToSave { get { return PresetManager.CurrentPreset.FoldersToSave; } }
         public static uint BackupNumber { get { return PresetManager.CurrentPreset.BackupNumber; } set { PresetManager.CurrentPreset.BackupNumber = value; } }
         #endregion
 
         #region Methods:
-        public static void Add(string filePath)
+        public static void AddFile(string filePath)
         {
             FilesToSave.Add(filePath);
+        }
+
+        public static void AddFolder(string folderPath)
+        {
+            FoldersToSave.Add(folderPath);
         }
 
         public static void Clear()
         {
             FilesToSave.Clear();
+            FoldersToSave.Clear();
         }
 
-        public static void RemoveByIndex(int index)
+        public static void RemoveFromLists(string item)
         {
-            if (index < 0 || index >= FilesToSave.Count)
+            var list = FilesToSave.Contains(item) ? FilesToSave : FoldersToSave;
+            int index = list.IndexOf(item);
+            if (index == -1)
                 return;
-            FilesToSave.RemoveAt(index);
+            list.RemoveAt(index);
         }
 
-        public static void RemoveByPath(string path)
-        {
-            int? index = IndexOf(path);
-            if (index is null)
-                return;
-            RemoveByIndex((int)index);
-        }
-
-        private static int? IndexOf(string path)
-        {
-            if (FilesToSave.Count < 1)
-                return null;
-            for (int i = 0; i < FilesToSave.Count; i++)
-            {
-                if (FilesToSave[i] == path)
-                {
-                    return i;
-                }
-            }
-            return null;
-        }
-
-        public static bool Backup()
+        public static bool Backup()//todo redo logic to also save folders and any files and folders inside
         {
             try
             {

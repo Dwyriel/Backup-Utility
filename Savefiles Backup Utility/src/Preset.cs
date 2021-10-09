@@ -18,6 +18,7 @@ namespace Savefiles_Backup_Utility
         #region Public Attributes:
         public static Preset CurrentPreset { get { return ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex]; } set { ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex] = value; } }
         public static ConfigAndPresets ConfigAndPresets;
+        public static bool ConfigFileExists { get { return File.Exists(configAndPresetsFilePath); } }
         #endregion
 
         #region Methods:
@@ -26,7 +27,7 @@ namespace Savefiles_Backup_Utility
             currentDir = new DirectoryInfo(Path.GetDirectoryName(Application.ExecutablePath));
             configAndPresetsFilePath = currentDir.FullName + @"\" + ConfigAndPresetsFileName;
             bool loaded = false;
-            if (File.Exists(configAndPresetsFilePath))
+            if (ConfigFileExists)
                 loaded = Load();
             if (loaded)
             {
@@ -142,7 +143,6 @@ namespace Savefiles_Backup_Utility
 
     public class ConfigAndPresets
     {
-        public bool FirstTime = true;
         public Point StartLocation;
         public string BackupFolderPath = "";
         public int CurrentPresetIndex = 0;
@@ -154,5 +154,6 @@ namespace Savefiles_Backup_Utility
         public string PresetName;
         public uint BackupNumber = 1;
         public List<string> FilesToSave = new List<string>();
+        public List<string> FoldersToSave = new List<string>();
     }
 }

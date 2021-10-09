@@ -36,11 +36,8 @@ namespace Savefiles_Backup_Utility
 
         private void SetStartLocation()
         {
-            if (PresetManager.ConfigAndPresets.FirstTime)
-            {
-                PresetManager.ConfigAndPresets.FirstTime = false;
+            if (!PresetManager.ConfigFileExists)
                 return;
-            }
             Location = PresetManager.ConfigAndPresets.StartLocation;
         }
 
@@ -197,7 +194,7 @@ namespace Savefiles_Backup_Utility
                 HideStatusLabelTimer("Failed");
                 return;
             }
-            if(FileManager.FilesToSave.Count< 1)
+            if (FileManager.FilesToSave.Count < 1)
             {
                 MessageBox.Show("No files to backup, Select files first");
                 HideStatusLabelTimer("Failed");

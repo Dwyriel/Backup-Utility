@@ -1,10 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Savefiles_Backup_Utility
 {
     public partial class Files : Form
     {
+        static readonly string foldersItem = "Folders:";
+        static readonly string filesItem = "Files:";
+
         #region Constructor:
         public Files()
         {
@@ -17,11 +21,15 @@ namespace Savefiles_Backup_Utility
         #endregion
 
         #region Methods:
-        private void ShowFiles()
+        private void ShowItems()
         {
             FilesListBox.Items.Clear();
+            FilesListBox.Items.Add(filesItem);
             foreach (string file in FileManager.FilesToSave)
                 FilesListBox.Items.Add(file);
+            FilesListBox.Items.Add(foldersItem);
+            foreach (string folder in FileManager.FoldersToSave)
+                FilesListBox.Items.Add(folder);
         }
 
         private void SetButtonsState()
@@ -37,11 +45,11 @@ namespace Savefiles_Backup_Utility
         {
             BUNumberTxtBox.ReadOnly = true;
             BUNumberTxtBox.Text = FileManager.BackupNumber.ToString();
-            ShowFiles();
+            ShowItems();
             SetButtonsState();
         }
 
-        private void AddBtn_Click(object sender, EventArgs e)
+        private void AddFileBtn_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog() { Multiselect = true, Title = "Select Files", CheckFileExists = true };
             fileDialog.ShowDialog(this);
@@ -51,36 +59,66 @@ namespace Savefiles_Backup_Utility
                 bool shouldAdd = true;
                 foreach (string filePath in FileManager.FilesToSave)
                     if (selectedFile == filePath)
+                    {
                         shouldAdd = false;
+                        break;
+                    }
                 if (shouldAdd)
-                    FileManager.Add(selectedFile);
+                    FileManager.AddFile(selectedFile);
             }
             PresetManager.Save();
-            ShowFiles();
+            ShowItems();
+            SetButtonsState();
+        }
+
+        private void AddFolderBtn_Click(object sender, EventArgs e)
+        {
+            CustomFolderPicker customFolderPicker = new CustomFolderPicker() { Title = "Select Folder" };
+            customFolderPicker.ShowDialog(Handle);
+            string folderPath = customFolderPicker.ResultPath;
+            if (folderPath is null)
+                return;
+            if (!Directory.Exists(folderPath))
+            {
+                MessageBox.Show("Must be a valid folder path", "Invalid path");
+                return;
+            }
+            bool shouldAdd = true;
+            foreach (string folder in FileManager.FoldersToSave)
+                if (folderPath == folder)
+                {
+                    shouldAdd = false;
+                    break;
+                }
+            if (shouldAdd)
+                FileManager.AddFolder(folderPath);
+            PresetManager.Save();
+            ShowItems();
             SetButtonsState();
         }
 
         private void RemoveBtn_Click(object sender, EventArgs e)
         {
-            if (FilesListBox.SelectedItem is null)
+            string selectedItem = FilesListBox.SelectedItem.ToString();
+            if (selectedItem is null || selectedItem.Equals(filesItem) || selectedItem.Equals(foldersItem))
                 return;
-            DialogResult confirmResult = MessageBox.Show("Are you sure you want to remove this file?", "Confirm removal", MessageBoxButtons.YesNo);
+            DialogResult confirmResult = MessageBox.Show("Are you sure you want to remove this item?", "Confirm removal", MessageBoxButtons.YesNo);
             if (confirmResult != DialogResult.Yes)
                 return;
-            FileManager.RemoveByPath((string)FilesListBox.SelectedItem);
+            FileManager.RemoveFromLists(selectedItem);
             PresetManager.Save();
-            ShowFiles();
+            ShowItems();
             SetButtonsState();
         }
 
         private void ClearBtn_Click(object sender, EventArgs e)
         {
-            DialogResult confirmResult = MessageBox.Show("Are you sure you want to clear the file list?", "Confirm", MessageBoxButtons.YesNo);
+            DialogResult confirmResult = MessageBox.Show("Are you sure you want to clear the list?", "Confirm", MessageBoxButtons.YesNo);
             if (confirmResult != DialogResult.Yes)
                 return;
             FileManager.Clear();
             PresetManager.Save();
-            ShowFiles();
+            ShowItems();
             SetButtonsState();
         }
 
