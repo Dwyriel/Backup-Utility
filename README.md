@@ -2,11 +2,11 @@
 
 ## How to Use
 
-1 - Select a backup Folder. It's going to be used for all backups while keeping things organized inside.
-2 - Create a preset. Presets will help you organized what files you want to backup when you click 'Backup!'.
-3 - Select the files and folder you want to backup for the selected preset.
-4 - Click Backup!
-5 - Posterior usages are as simples as opening the program and clicking Backup!
+1 - Select a backup Folder. It's going to be used for all backups while keeping things organized inside.<br />
+2 - Create a preset. Presets will help you organized what files you want to backup when you click 'Backup!'.<br />
+3 - Select the files and folder you want to backup for the selected preset.<br />
+4 - Click Backup!<br />
+5 - Posterior usages are as simples as opening the program and clicking Backup!<br />
 
 Backup Folder will look something like this:
 
