@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Backup_Utility
 {
@@ -50,7 +51,7 @@ namespace Backup_Utility
                 return BackupST();
         }
 
-        private static bool BackupMT()//todo MT Backup
+        private static bool BackupMT()
         {
             try
             {
@@ -82,7 +83,7 @@ namespace Backup_Utility
                     }
                     BackupAllInDirMT(new DirectoryInfo(folder), backupDir);
                 }
-                WaitHandle.WaitAll(MT_Events.ToArray());
+                WaitAllExt(MT_Events.ToArray());
                 return true;
             }
             catch (Exception exception)
@@ -107,6 +108,28 @@ namespace Backup_Utility
             }
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirMT(subDirs, backupDir);
+        }
+
+        private static void WaitAllExt(WaitHandle[] waitHandles)
+        {
+            const int waitAllArrayLimit = 64;
+            var prevEndIndex = -1;
+            while (prevEndIndex < waitHandles.Length - 1)
+            {
+                var startIndex = prevEndIndex + 1;
+                var endIndex = startIndex + waitAllArrayLimit - 1;
+                if (endIndex > waitHandles.Length - 1)
+                {
+                    endIndex = waitHandles.Length - 1;
+                }
+                prevEndIndex = endIndex;
+                WaitHandle[] trimmedWaitHandles = new WaitHandle[endIndex - startIndex + 1];
+                for (int i = startIndex, i2 = 0; i <= endIndex; i++, i2++)
+                {
+                    trimmedWaitHandles[i2] = waitHandles[i];
+                }
+                WaitHandle.WaitAll(trimmedWaitHandles);
+            }
         }
 
         private static bool BackupST()

@@ -70,6 +70,16 @@ namespace Backup_Utility
             MultithreadedSubmenuOptions.Checked = PresetManager.ConfigAndPresets.Multithreaded;
         }
 
+        private void SetButtonsEnabledAttribute(bool isEnabled)
+        {
+            presetComboBox.Enabled = isEnabled;
+            newPresetBtn.Enabled = isEnabled;
+            deletePresetBtn.Enabled = isEnabled;
+            FilesBtn.Enabled = isEnabled;
+            backupFolderSearchBtn.Enabled = isEnabled;
+            backupFolderTxtBox.Enabled = isEnabled;
+        }
+
         private bool CheckBackupFolder()
         {
             if (PresetManager.ConfigAndPresets.BackupFolderPath == "" || PresetManager.ConfigAndPresets.BackupFolderPath is null)
@@ -216,11 +226,13 @@ namespace Backup_Utility
                 return;
             }
             BackupInProgress = true;
+            SetButtonsEnabledAttribute(false);
             ShowStatusLabel("Working on it..");
             if (!CheckBackupFolder())
             {
                 HideStatusLabelTimer("Failed");
                 BackupInProgress = false;
+                SetButtonsEnabledAttribute(true);
                 return;
             }
             if (!PresetManager.PresetsExist)
@@ -228,6 +240,7 @@ namespace Backup_Utility
                 MessageBox.Show("Create a preset first");
                 HideStatusLabelTimer("Failed");
                 BackupInProgress = false;
+                SetButtonsEnabledAttribute(true);
                 return;
             }
             if (!FileManager.isThereItemsToSave)
@@ -235,6 +248,7 @@ namespace Backup_Utility
                 MessageBox.Show("No files to backup, Select files first");
                 HideStatusLabelTimer("Failed");
                 BackupInProgress = false;
+                SetButtonsEnabledAttribute(true);
                 return;
             }
             await Task.Factory.StartNew(() =>
@@ -242,6 +256,7 @@ namespace Backup_Utility
                 WasBackupSuccessful = FileManager.Backup();
                 BackupInProgress = false;
             }, TaskCreationOptions.LongRunning);
+            SetButtonsEnabledAttribute(true);
             HideStatusLabelTimer(WasBackupSuccessful ? "Done!" : "Failed");
         }
 
