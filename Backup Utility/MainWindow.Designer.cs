@@ -39,10 +39,10 @@ namespace Backup_Utility
             this.BackupBtn = new System.Windows.Forms.Button();
             this.FilesBtn = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
-            this.MenuStrip = new System.Windows.Forms.MenuStrip();
+            this.BUMenuStrip = new System.Windows.Forms.MenuStrip();
             this.OptionsMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MultithreadedSubmenuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuStrip.SuspendLayout();
+            this.BUMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // presetComboBox
@@ -151,16 +151,17 @@ namespace Backup_Utility
             this.StatusLabel.Text = "Status";
             this.StatusLabel.Visible = false;
             // 
-            // MenuStrip
+            // BUMenuStrip
             // 
-            this.MenuStrip.BackColor = System.Drawing.Color.MistyRose;
-            this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.BUMenuStrip.BackColor = System.Drawing.Color.LightGray;
+            this.BUMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OptionsMenuStripItem});
-            this.MenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.MenuStrip.Name = "MenuStrip";
-            this.MenuStrip.Size = new System.Drawing.Size(415, 24);
-            this.MenuStrip.TabIndex = 603;
-            this.MenuStrip.Text = "menuStrip1";
+            this.BUMenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.BUMenuStrip.Name = "BUMenuStrip";
+            this.BUMenuStrip.ShowItemToolTips = true;
+            this.BUMenuStrip.Size = new System.Drawing.Size(415, 24);
+            this.BUMenuStrip.TabIndex = 603;
+            this.BUMenuStrip.Text = "menuStrip1";
             // 
             // OptionsMenuStripItem
             // 
@@ -177,6 +178,8 @@ namespace Backup_Utility
             this.MultithreadedSubmenuOptions.Name = "MultithreadedSubmenuOptions";
             this.MultithreadedSubmenuOptions.Size = new System.Drawing.Size(180, 22);
             this.MultithreadedSubmenuOptions.Text = "Multithreaded";
+            this.MultithreadedSubmenuOptions.ToolTipText = "Multithreaded should only be selected if you plan on backing up multiple very lar" +
+    "ge files, otherwise it\'s going to be slower";
             this.MultithreadedSubmenuOptions.CheckedChanged += new System.EventHandler(this.MultithreadedSubmenuOptions_CheckedChanged);
             // 
             // MainWindow
@@ -194,14 +197,14 @@ namespace Backup_Utility
             this.Controls.Add(this.deletePresetBtn);
             this.Controls.Add(this.newPresetBtn);
             this.Controls.Add(this.presetComboBox);
-            this.Controls.Add(this.MenuStrip);
-            this.MainMenuStrip = this.MenuStrip;
+            this.Controls.Add(this.BUMenuStrip);
+            this.MainMenuStrip = this.BUMenuStrip;
             this.Name = "MainWindow";
             this.Text = "Backup Utility";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            this.MenuStrip.ResumeLayout(false);
-            this.MenuStrip.PerformLayout();
+            this.BUMenuStrip.ResumeLayout(false);
+            this.BUMenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -219,7 +222,7 @@ namespace Backup_Utility
         private System.Windows.Forms.Button BackupBtn;
         private System.Windows.Forms.Button FilesBtn;
         private System.Windows.Forms.Label StatusLabel;
-        private System.Windows.Forms.MenuStrip MenuStrip;
+        private System.Windows.Forms.MenuStrip BUMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem OptionsMenuStripItem;
         private System.Windows.Forms.ToolStripMenuItem MultithreadedSubmenuOptions;
     }
