@@ -23,12 +23,6 @@ namespace Savefiles_Backup_Utility
             FoldersToSave.Add(folderPath);
         }
 
-        public static void Clear()
-        {
-            FilesToSave.Clear();
-            FoldersToSave.Clear();
-        }
-
         public static void RemoveFromLists(string item)
         {
             var list = FilesToSave.Contains(item) ? FilesToSave : FoldersToSave;
@@ -36,6 +30,12 @@ namespace Savefiles_Backup_Utility
             if (index == -1)
                 return;
             list.RemoveAt(index);
+        }
+
+        public static void Clear()
+        {
+            FilesToSave.Clear();
+            FoldersToSave.Clear();
         }
 
         public static bool Backup()//todo redo logic to also save folders and any files and folders inside

@@ -6,8 +6,10 @@ namespace Savefiles_Backup_Utility
 {
     public partial class Files : Form
     {
-        static readonly string foldersItem = "Folders:";
+        #region Attributes:
         static readonly string filesItem = "Files:";
+        static readonly string foldersItem = "Folders:";
+        #endregion
 
         #region Constructor:
         public Files()
@@ -34,7 +36,7 @@ namespace Savefiles_Backup_Utility
 
         private void SetButtonsState()
         {
-            bool shouldEnable = FileManager.FilesToSave.Count > 0;
+            bool shouldEnable = FileManager.FilesToSave.Count > 0 || FileManager.FoldersToSave.Count > 0;
             RemoveBtn.Enabled = shouldEnable;
             ClearBtn.Enabled = shouldEnable;
         }

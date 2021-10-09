@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Savefiles_Backup_Utility
 {
     public partial class MainWindow : Form
     {
+        #region Attributes:
         Timer timer = null;
+        bool BackupInProgress = false;
+        bool WasBackupSuccess = false;
+        #endregion
 
         #region Constroctor:
         public MainWindow()
@@ -186,8 +191,14 @@ namespace Savefiles_Backup_Utility
         #endregion
 
         #region Backup:
-        private void BackupBtn_Click(object sender, EventArgs e)
+        private async void BackupBtn_Click(object sender, EventArgs e)
         {
+            if (BackupInProgress)
+            {
+                ShowStatusLabel("Not done yet baka!");
+                return;
+            }
+            BackupInProgress = true;
             ShowStatusLabel("Working on it..");
             if (!CheckBackupFolder())
             {
@@ -200,16 +211,18 @@ namespace Savefiles_Backup_Utility
                 HideStatusLabelTimer("Failed");
                 return;
             }
-            if (!FileManager.Backup())
+            await Task.Factory.StartNew(() =>
             {
-                HideStatusLabelTimer("Failed");
-                return;
-            }
-            HideStatusLabelTimer("Done!");
+                WasBackupSuccess = FileManager.Backup();
+                BackupInProgress = false;
+            }, TaskCreationOptions.LongRunning);
+            HideStatusLabelTimer(WasBackupSuccess ? "Done!" : "Failed");
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            if (BackupInProgress)
+                return;
             StatusLabel.Visible = false;
             timer.Stop();
         }
