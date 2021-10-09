@@ -19,6 +19,7 @@ namespace Backup_Utility
         public static Preset CurrentPreset { get { return ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex]; } set { ConfigAndPresets.Presets[ConfigAndPresets.CurrentPresetIndex] = value; } }
         public static ConfigAndPresets ConfigAndPresets;
         public static bool ConfigFileExists { get { return File.Exists(configAndPresetsFilePath); } }
+        public static bool PresetsExist { get { return ConfigAndPresets.Presets.Count > 0; } }
         #endregion
 
         #region Methods:

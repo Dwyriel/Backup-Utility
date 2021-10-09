@@ -220,12 +220,21 @@ namespace Backup_Utility
             if (!CheckBackupFolder())
             {
                 HideStatusLabelTimer("Failed");
+                BackupInProgress = false;
                 return;
             }
-            if (FileManager.FilesToSave.Count < 1)
+            if (!PresetManager.PresetsExist)
+            {
+                MessageBox.Show("Create a preset first");
+                HideStatusLabelTimer("Failed");
+                BackupInProgress = false;
+                return;
+            }
+            if (!FileManager.isThereItemsToSave)
             {
                 MessageBox.Show("No files to backup, Select files first");
                 HideStatusLabelTimer("Failed");
+                BackupInProgress = false;
                 return;
             }
             await Task.Factory.StartNew(() =>

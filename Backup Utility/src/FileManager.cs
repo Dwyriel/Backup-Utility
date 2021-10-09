@@ -10,6 +10,7 @@ namespace Backup_Utility
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
         public static List<string> FoldersToSave { get { return PresetManager.CurrentPreset.FoldersToSave; } }
         public static uint BackupNumber { get { return PresetManager.CurrentPreset.BackupNumber; } set { PresetManager.CurrentPreset.BackupNumber = value; } }
+        public static bool isThereItemsToSave { get { return FilesToSave.Count > 0 || FoldersToSave.Count > 0; } }
         #endregion
 
         #region Methods:
@@ -38,7 +39,18 @@ namespace Backup_Utility
             FoldersToSave.Clear();
         }
 
-        public static bool Backup()//todo redo logic to also save folders and any files and folders inside
+        public static bool Backup()
+        {
+            if (PresetManager.ConfigAndPresets.Multithreaded)
+                return BackupMT();
+            else
+                return BackupST();
+        }
+
+        private static bool BackupMT()//todo MT Backup
+        { return false; }
+
+        private static bool BackupST()
         {
             try
             {
@@ -58,13 +70,35 @@ namespace Backup_Utility
                     FileInfo fileInfo = new FileInfo(file);
                     File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name);
                 }
+                foreach (string folder in FoldersToSave)
+                {
+                    if (!Directory.Exists(folder))
+                    {
+                        ErrorLogger.ShowErrorText($"Folder '{folder}' doesn't exist or was deleted, skipping folder");
+                        continue;
+                    }
+                    BackupAllInDirST(new DirectoryInfo(folder), backupDir);
+                }
                 return true;
             }
             catch (Exception exception)
             {
-                ErrorLogger.ShowErrorTextWithExceptionMessage("An error occurred while backing up files.", exception);
+                ErrorLogger.ShowErrorTextWithExceptionMessage("An error occurred while backing up files.", exception, true);
                 return false;
             }
+        }
+
+        private static void BackupAllInDirST(DirectoryInfo folderToCopy, DirectoryInfo destDir)
+        {
+            DirectoryInfo backupDir = CreateNewFolder(destDir.FullName + @"\" + folderToCopy.Name);
+            if (backupDir is null)
+                return;
+            FileInfo[] filesToSave = folderToCopy.GetFiles();
+            DirectoryInfo[] foldersToSave = folderToCopy.GetDirectories();
+            foreach (FileInfo file in filesToSave)
+                file.CopyTo(Path.Combine(backupDir.FullName, file.Name));
+            foreach (DirectoryInfo subDirs in foldersToSave)
+                BackupAllInDirST(subDirs, backupDir);
         }
 
         private static DirectoryInfo CreateNewFolder(string path)
