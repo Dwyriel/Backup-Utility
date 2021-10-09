@@ -10,7 +10,7 @@ namespace Backup_Utility
     static class PresetManager
     {
         #region Private Attributes:
-        private static readonly string ConfigAndPresetsFileName = "Savefiles Backup Utility.ini";
+        private static readonly string ConfigAndPresetsFileName = "Backup Utility.ini";
         private static DirectoryInfo currentDir;
         private static string configAndPresetsFilePath;
         #endregion
