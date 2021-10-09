@@ -120,4 +120,8 @@
   <metadata name="BUMenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="MultithreadedSubmenuOptions.ToolTipText" xml:space="preserve">
+    <value>Multithreaded will usually be faster if you're backing up more than one file, or multiple larger files.
+If there is a problem with backed up files or the integrity of files are lost during backup please turn multithreading off.</value>
+  </data>
 </root>

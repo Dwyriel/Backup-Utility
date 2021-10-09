@@ -72,7 +72,7 @@
     <Compile Include="src\CustomFolderPicker.cs" />
     <Compile Include="src\ErrorLogger.cs" />
     <Compile Include="src\FileManager.cs" />
-    <Compile Include="src\Preset.cs" />
+    <Compile Include="src\PresetAndConfigs.cs" />
     <EmbeddedResource Include="Files.resx">
       <DependentUpon>Files.cs</DependentUpon>
     </EmbeddedResource>

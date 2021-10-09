@@ -29,6 +29,7 @@ namespace Backup_Utility
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.presetComboBox = new System.Windows.Forms.ComboBox();
             this.newPresetBtn = new System.Windows.Forms.Button();
             this.deletePresetBtn = new System.Windows.Forms.Button();
@@ -174,12 +175,13 @@ namespace Backup_Utility
             // 
             // MultithreadedSubmenuOptions
             // 
+            this.MultithreadedSubmenuOptions.Checked = true;
             this.MultithreadedSubmenuOptions.CheckOnClick = true;
+            this.MultithreadedSubmenuOptions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MultithreadedSubmenuOptions.Name = "MultithreadedSubmenuOptions";
             this.MultithreadedSubmenuOptions.Size = new System.Drawing.Size(180, 22);
             this.MultithreadedSubmenuOptions.Text = "Multithreaded";
-            this.MultithreadedSubmenuOptions.ToolTipText = "Multithreaded should only be selected if you plan on backing up multiple very lar" +
-    "ge files, otherwise it\'s going to be slower";
+            this.MultithreadedSubmenuOptions.ToolTipText = resources.GetString("MultithreadedSubmenuOptions.ToolTipText");
             this.MultithreadedSubmenuOptions.CheckedChanged += new System.EventHandler(this.MultithreadedSubmenuOptions_CheckedChanged);
             // 
             // MainWindow

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Backup_Utility
 {
     static class FileManager
     {
+        private static List<ManualResetEvent> MT_Events = new List<ManualResetEvent>();
+
         #region Public Attributes:
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
         public static List<string> FoldersToSave { get { return PresetManager.CurrentPreset.FoldersToSave; } }
@@ -48,7 +51,63 @@ namespace Backup_Utility
         }
 
         private static bool BackupMT()//todo MT Backup
-        { return false; }
+        {
+            try
+            {
+                MT_Events = new List<ManualResetEvent>();
+                DirectoryInfo presetDir = CreateNewFolder(PresetManager.ConfigAndPresets.BackupFolderPath + @"\" + PresetManager.CurrentPreset.PresetName);
+                if (presetDir is null)
+                    return false;
+                DirectoryInfo backupDir = CreateNewFolder(presetDir.FullName + @"\" + "Backup " + PresetManager.CurrentPreset.BackupNumber++.ToString());
+                if (backupDir is null)
+                    return false;
+                foreach (string file in FilesToSave)
+                {
+                    if (!File.Exists(file))
+                    {
+                        ErrorLogger.ShowErrorText($"File '{file}' doesn't exist or was deleted, skipping file");
+                        continue;
+                    }
+                    FileInfo fileInfo = new FileInfo(file);
+                    MT_Events.Add(new ManualResetEvent(false));
+                    int index = MT_Events.Count - 1;
+                    ThreadPool.QueueUserWorkItem(state => { File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name); MT_Events[(int)state].Set(); }, index);
+                }
+                foreach (string folder in FoldersToSave)
+                {
+                    if (!Directory.Exists(folder))
+                    {
+                        ErrorLogger.ShowErrorText($"Folder '{folder}' doesn't exist or was deleted, skipping folder");
+                        continue;
+                    }
+                    BackupAllInDirMT(new DirectoryInfo(folder), backupDir);
+                }
+                WaitHandle.WaitAll(MT_Events.ToArray());
+                return true;
+            }
+            catch (Exception exception)
+            {
+                ErrorLogger.ShowErrorTextWithExceptionMessage("An error occurred while backing up files.", exception, true);
+                return false;
+            }
+        }
+
+        private static void BackupAllInDirMT(DirectoryInfo folderToCopy, DirectoryInfo destDir)
+        {
+            DirectoryInfo backupDir = CreateNewFolder(destDir.FullName + @"\" + folderToCopy.Name);
+            if (backupDir is null)
+                return;
+            FileInfo[] filesToSave = folderToCopy.GetFiles();
+            DirectoryInfo[] foldersToSave = folderToCopy.GetDirectories();
+            foreach (FileInfo file in filesToSave)
+            {
+                MT_Events.Add(new ManualResetEvent(false));
+                int index = MT_Events.Count - 1;
+                ThreadPool.QueueUserWorkItem(state => { file.CopyTo(Path.Combine(backupDir.FullName, file.Name)); MT_Events[(int)state].Set(); }, index);
+            }
+            foreach (DirectoryInfo subDirs in foldersToSave)
+                BackupAllInDirMT(subDirs, backupDir);
+        }
 
         private static bool BackupST()
         {

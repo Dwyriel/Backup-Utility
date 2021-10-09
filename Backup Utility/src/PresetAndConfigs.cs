@@ -161,7 +161,7 @@ namespace Backup_Utility
     public class ConfigAndPresets
     {
         public Point StartLocation;
-        public bool Multithreaded = false;
+        public bool Multithreaded = true;
         public string BackupFolderPath = "";
         public int CurrentPresetIndex = 0;
         public List<Preset> Presets = new List<Preset>();
