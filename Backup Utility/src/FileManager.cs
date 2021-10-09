@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 
-namespace Savefiles_Backup_Utility
+namespace Backup_Utility
 {
     static class FileManager
     {

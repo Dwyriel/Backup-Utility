@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E699F70D-80E6-477D-A19B-726AFC9BE5FB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Savefiles_Backup_Utility</RootNamespace>
-    <AssemblyName>Savefiles Backup Utility</AssemblyName>
+    <RootNamespace>Backup_Utility</RootNamespace>
+    <AssemblyName>Backup Utility</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

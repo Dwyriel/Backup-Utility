@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Savefiles Backup Utility")]
+[assembly: AssemblyTitle("Backup Utility")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Dwyriel")]
-[assembly: AssemblyProduct("Savefiles Backup Utility")]
+[assembly: AssemblyProduct("Backup Utility")]
 [assembly: AssemblyCopyright("Copyright © Dwyriel 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

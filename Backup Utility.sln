@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Savefiles Backup Utility", "Savefiles Backup Utility\Savefiles Backup Utility.csproj", "{E699F70D-80E6-477D-A19B-726AFC9BE5FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backup Utility", "Backup Utility\Backup Utility.csproj", "{E699F70D-80E6-477D-A19B-726AFC9BE5FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

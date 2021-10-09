@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 
-namespace Savefiles_Backup_Utility
+namespace Backup_Utility
 {
     static class PresetManager
     {

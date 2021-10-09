@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace Savefiles_Backup_Utility
+namespace Backup_Utility
 {
     class ErrorLogger
     {

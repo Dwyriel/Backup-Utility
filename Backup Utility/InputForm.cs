@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Savefiles_Backup_Utility
+namespace Backup_Utility
 {
     public partial class InputForm : Form
     {

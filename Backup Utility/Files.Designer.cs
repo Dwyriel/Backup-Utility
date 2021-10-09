@@ -1,5 +1,5 @@
 ﻿
-namespace Savefiles_Backup_Utility
+namespace Backup_Utility
 {
     partial class Files
     {
