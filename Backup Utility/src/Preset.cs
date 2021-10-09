@@ -43,6 +43,8 @@ namespace Backup_Utility
             {
                 List<string> newFilePathList = new List<string>();
                 List<string> deletedFilePaths = new List<string>();
+                List<string> newFolderPathList = new List<string>();
+                List<string> deletedFolderPaths = new List<string>();
                 bool fileDidntExist = false;
                 foreach (string file in preset.FilesToSave)
                 {
@@ -54,13 +56,27 @@ namespace Backup_Utility
                     }
                     newFilePathList.Add(file);
                 }
-                if (fileDidntExist)
+                bool folderDidntExist = false;
+                foreach (string folder in preset.FoldersToSave)
                 {
-                    string deletedFiles = Environment.NewLine + Environment.NewLine + "Deleted Files:";
+                    if (!Directory.Exists(folder))
+                    {
+                        folderDidntExist = true;
+                        deletedFolderPaths.Add(folder);
+                        continue;
+                    }
+                    newFolderPathList.Add(folder);
+                }
+                if (fileDidntExist || folderDidntExist)
+                {
+                    string deletedItems = Environment.NewLine + Environment.NewLine + "Deleted Items:";
                     foreach (string file in deletedFilePaths)
-                        deletedFiles += Environment.NewLine + file;
-                    ErrorLogger.ShowErrorText($"One or more files in '{preset.PresetName}' preset don't exist or were deleted and were removed from the list" + deletedFiles, true);
+                        deletedItems += Environment.NewLine + file;
+                    foreach (string folder in deletedFolderPaths)
+                        deletedItems += Environment.NewLine + folder;
+                    ErrorLogger.ShowErrorText($"One or more items in '{preset.PresetName}' preset don't exist or were deleted and were removed from the list" + deletedItems, true);
                     preset.FilesToSave = newFilePathList;
+                    preset.FoldersToSave = newFolderPathList;
                 }
             }
         }
@@ -144,6 +160,7 @@ namespace Backup_Utility
     public class ConfigAndPresets
     {
         public Point StartLocation;
+        public bool Multithreaded = false;
         public string BackupFolderPath = "";
         public int CurrentPresetIndex = 0;
         public List<Preset> Presets = new List<Preset>();

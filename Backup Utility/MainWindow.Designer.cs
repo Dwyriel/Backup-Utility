@@ -39,6 +39,10 @@ namespace Backup_Utility
             this.BackupBtn = new System.Windows.Forms.Button();
             this.FilesBtn = new System.Windows.Forms.Button();
             this.StatusLabel = new System.Windows.Forms.Label();
+            this.MenuStrip = new System.Windows.Forms.MenuStrip();
+            this.OptionsMenuStripItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MultithreadedSubmenuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // presetComboBox
@@ -46,7 +50,7 @@ namespace Backup_Utility
             this.presetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.presetComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.presetComboBox.FormattingEnabled = true;
-            this.presetComboBox.Location = new System.Drawing.Point(27, 32);
+            this.presetComboBox.Location = new System.Drawing.Point(27, 52);
             this.presetComboBox.Name = "presetComboBox";
             this.presetComboBox.Size = new System.Drawing.Size(227, 26);
             this.presetComboBox.TabIndex = 0;
@@ -55,7 +59,7 @@ namespace Backup_Utility
             // newPresetBtn
             // 
             this.newPresetBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.newPresetBtn.Location = new System.Drawing.Point(260, 32);
+            this.newPresetBtn.Location = new System.Drawing.Point(260, 52);
             this.newPresetBtn.Name = "newPresetBtn";
             this.newPresetBtn.Size = new System.Drawing.Size(68, 26);
             this.newPresetBtn.TabIndex = 1;
@@ -66,7 +70,7 @@ namespace Backup_Utility
             // deletePresetBtn
             // 
             this.deletePresetBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.deletePresetBtn.Location = new System.Drawing.Point(334, 32);
+            this.deletePresetBtn.Location = new System.Drawing.Point(334, 52);
             this.deletePresetBtn.Name = "deletePresetBtn";
             this.deletePresetBtn.Size = new System.Drawing.Size(68, 26);
             this.deletePresetBtn.TabIndex = 2;
@@ -78,7 +82,7 @@ namespace Backup_Utility
             // 
             this.presetLabel.AutoSize = true;
             this.presetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetLabel.Location = new System.Drawing.Point(12, 9);
+            this.presetLabel.Location = new System.Drawing.Point(12, 29);
             this.presetLabel.Name = "presetLabel";
             this.presetLabel.Size = new System.Drawing.Size(59, 20);
             this.presetLabel.TabIndex = 600;
@@ -87,7 +91,7 @@ namespace Backup_Utility
             // backupFolderTxtBox
             // 
             this.backupFolderTxtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.backupFolderTxtBox.Location = new System.Drawing.Point(27, 92);
+            this.backupFolderTxtBox.Location = new System.Drawing.Point(27, 112);
             this.backupFolderTxtBox.Name = "backupFolderTxtBox";
             this.backupFolderTxtBox.Size = new System.Drawing.Size(301, 23);
             this.backupFolderTxtBox.TabIndex = 3;
@@ -97,7 +101,7 @@ namespace Backup_Utility
             // 
             this.backupFolderLabel.AutoSize = true;
             this.backupFolderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.backupFolderLabel.Location = new System.Drawing.Point(12, 69);
+            this.backupFolderLabel.Location = new System.Drawing.Point(12, 89);
             this.backupFolderLabel.Name = "backupFolderLabel";
             this.backupFolderLabel.Size = new System.Drawing.Size(116, 20);
             this.backupFolderLabel.TabIndex = 601;
@@ -106,7 +110,7 @@ namespace Backup_Utility
             // backupFolderSearchBtn
             // 
             this.backupFolderSearchBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.backupFolderSearchBtn.Location = new System.Drawing.Point(334, 90);
+            this.backupFolderSearchBtn.Location = new System.Drawing.Point(334, 110);
             this.backupFolderSearchBtn.Name = "backupFolderSearchBtn";
             this.backupFolderSearchBtn.Size = new System.Drawing.Size(68, 27);
             this.backupFolderSearchBtn.TabIndex = 4;
@@ -117,7 +121,7 @@ namespace Backup_Utility
             // BackupBtn
             // 
             this.BackupBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackupBtn.Location = new System.Drawing.Point(16, 133);
+            this.BackupBtn.Location = new System.Drawing.Point(16, 141);
             this.BackupBtn.Name = "BackupBtn";
             this.BackupBtn.Size = new System.Drawing.Size(87, 32);
             this.BackupBtn.TabIndex = 5;
@@ -128,7 +132,7 @@ namespace Backup_Utility
             // FilesBtn
             // 
             this.FilesBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FilesBtn.Location = new System.Drawing.Point(334, 133);
+            this.FilesBtn.Location = new System.Drawing.Point(334, 141);
             this.FilesBtn.Name = "FilesBtn";
             this.FilesBtn.Size = new System.Drawing.Size(68, 32);
             this.FilesBtn.TabIndex = 6;
@@ -140,18 +144,46 @@ namespace Backup_Utility
             // 
             this.StatusLabel.AutoSize = true;
             this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StatusLabel.Location = new System.Drawing.Point(109, 136);
+            this.StatusLabel.Location = new System.Drawing.Point(109, 144);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(66, 24);
             this.StatusLabel.TabIndex = 602;
             this.StatusLabel.Text = "Status";
             this.StatusLabel.Visible = false;
             // 
+            // MenuStrip
+            // 
+            this.MenuStrip.BackColor = System.Drawing.Color.MistyRose;
+            this.MenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OptionsMenuStripItem});
+            this.MenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.MenuStrip.Name = "MenuStrip";
+            this.MenuStrip.Size = new System.Drawing.Size(415, 24);
+            this.MenuStrip.TabIndex = 603;
+            this.MenuStrip.Text = "menuStrip1";
+            // 
+            // OptionsMenuStripItem
+            // 
+            this.OptionsMenuStripItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MultithreadedSubmenuOptions});
+            this.OptionsMenuStripItem.Font = new System.Drawing.Font("Arial", 10F);
+            this.OptionsMenuStripItem.Name = "OptionsMenuStripItem";
+            this.OptionsMenuStripItem.Size = new System.Drawing.Size(69, 20);
+            this.OptionsMenuStripItem.Text = "Options";
+            // 
+            // MultithreadedSubmenuOptions
+            // 
+            this.MultithreadedSubmenuOptions.CheckOnClick = true;
+            this.MultithreadedSubmenuOptions.Name = "MultithreadedSubmenuOptions";
+            this.MultithreadedSubmenuOptions.Size = new System.Drawing.Size(180, 22);
+            this.MultithreadedSubmenuOptions.Text = "Multithreaded";
+            this.MultithreadedSubmenuOptions.CheckedChanged += new System.EventHandler(this.MultithreadedSubmenuOptions_CheckedChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(415, 175);
+            this.ClientSize = new System.Drawing.Size(415, 187);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.FilesBtn);
             this.Controls.Add(this.BackupBtn);
@@ -162,10 +194,14 @@ namespace Backup_Utility
             this.Controls.Add(this.deletePresetBtn);
             this.Controls.Add(this.newPresetBtn);
             this.Controls.Add(this.presetComboBox);
+            this.Controls.Add(this.MenuStrip);
+            this.MainMenuStrip = this.MenuStrip;
             this.Name = "MainWindow";
             this.Text = "Backup Utility";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.MenuStrip.ResumeLayout(false);
+            this.MenuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,6 +219,9 @@ namespace Backup_Utility
         private System.Windows.Forms.Button BackupBtn;
         private System.Windows.Forms.Button FilesBtn;
         private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.MenuStrip MenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem OptionsMenuStripItem;
+        private System.Windows.Forms.ToolStripMenuItem MultithreadedSubmenuOptions;
     }
 }
 

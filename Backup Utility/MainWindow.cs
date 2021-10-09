@@ -10,7 +10,7 @@ namespace Backup_Utility
         #region Attributes:
         Timer timer = null;
         bool BackupInProgress = false;
-        bool WasBackupSuccess = false;
+        bool WasBackupSuccessful = false;
         #endregion
 
         #region Constroctor:
@@ -30,13 +30,12 @@ namespace Backup_Utility
             Icon = Properties.Resources.icon;
         }
 
-        private void SetPresetsComboBox()
+        private void SetFormControls()
         {
-            presetComboBox.Items.Clear();
-            foreach (Preset preset in PresetManager.ConfigAndPresets.Presets)
-                presetComboBox.Items.Add(preset.PresetName);
-            if (presetComboBox.Items.Count > 0)
-                presetComboBox.SelectedIndex = PresetManager.ConfigAndPresets.CurrentPresetIndex;
+            SetStartLocation();
+            SetBackupFolderStartingValue();
+            SetPresetsComboBox();
+            SetMultithreadedOption();
         }
 
         private void SetStartLocation()
@@ -51,9 +50,24 @@ namespace Backup_Utility
             backupFolderTxtBox.Text = PresetManager.ConfigAndPresets.BackupFolderPath ?? "";
         }
 
+        private void SetPresetsComboBox()
+        {
+            presetComboBox.Items.Clear();
+            foreach (Preset preset in PresetManager.ConfigAndPresets.Presets)
+                presetComboBox.Items.Add(preset.PresetName);
+            if (presetComboBox.Items.Count > 0)
+                presetComboBox.SelectedIndex = PresetManager.ConfigAndPresets.CurrentPresetIndex;
+            CheckForPreset();
+        }
+
         private void CheckForPreset()
         {
             FilesBtn.Enabled = PresetManager.ConfigAndPresets.Presets.Count > 0;
+        }
+
+        private void SetMultithreadedOption()
+        {
+            MultithreadedSubmenuOptions.Checked = PresetManager.ConfigAndPresets.Multithreaded;
         }
 
         private bool CheckBackupFolder()
@@ -97,16 +111,21 @@ namespace Backup_Utility
         private void MainWindow_Load(object sender, EventArgs e)
         {
             PresetManager.Initialize();
-            SetStartLocation();
-            SetBackupFolderStartingValue();
-            SetPresetsComboBox();
-            CheckForPreset();
+            SetFormControls();
             BackupBtn.Select();
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             PresetManager.ConfigAndPresets.StartLocation = Location;
+            PresetManager.Save();
+        }
+        #endregion
+
+        #region Options:
+        private void MultithreadedSubmenuOptions_CheckedChanged(object sender, EventArgs e)
+        {
+            PresetManager.ConfigAndPresets.Multithreaded = MultithreadedSubmenuOptions.Checked;
             PresetManager.Save();
         }
         #endregion
@@ -127,7 +146,6 @@ namespace Backup_Utility
             inputForm.Dispose();
             SetPresetsComboBox();
             PresetManager.Save();
-            CheckForPreset();
         }
 
         private void deletePresetBtn_Click(object sender, EventArgs e)
@@ -138,7 +156,6 @@ namespace Backup_Utility
             PresetManager.RemovePresetAtCurrentIndex();
             SetPresetsComboBox();
             PresetManager.Save();
-            CheckForPreset();
         }
 
         private void presetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -213,10 +230,10 @@ namespace Backup_Utility
             }
             await Task.Factory.StartNew(() =>
             {
-                WasBackupSuccess = FileManager.Backup();
+                WasBackupSuccessful = FileManager.Backup();
                 BackupInProgress = false;
             }, TaskCreationOptions.LongRunning);
-            HideStatusLabelTimer(WasBackupSuccess ? "Done!" : "Failed");
+            HideStatusLabelTimer(WasBackupSuccessful ? "Done!" : "Failed");
         }
 
         private void Timer_Tick(object sender, EventArgs e)
