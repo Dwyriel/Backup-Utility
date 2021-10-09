@@ -9,6 +9,7 @@ namespace Backup_Utility
     static class FileManager
     {
         private static List<ManualResetEvent> MT_Events = new List<ManualResetEvent>();
+        private static List<Task> Tasks = new List<Task>();
 
         #region Public Attributes:
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
@@ -51,6 +52,7 @@ namespace Backup_Utility
                 return BackupST();
         }
 
+        #region Backup MT:
         private static bool BackupMT()
         {
             try
@@ -70,9 +72,9 @@ namespace Backup_Utility
                         continue;
                     }
                     FileInfo fileInfo = new FileInfo(file);
-                    MT_Events.Add(new ManualResetEvent(false));
-                    int index = MT_Events.Count - 1;
-                    ThreadPool.QueueUserWorkItem(state => { File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name); MT_Events[(int)state].Set(); }, index);
+                    Tasks.Add(new Task(() => { return; }));
+                    int index = Tasks.Count - 1;
+                    ThreadPool.QueueUserWorkItem(state => { File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name); Tasks[(int)state].RunSynchronously(); }, index);
                 }
                 foreach (string folder in FoldersToSave)
                 {
@@ -83,7 +85,7 @@ namespace Backup_Utility
                     }
                     BackupAllInDirMT(new DirectoryInfo(folder), backupDir);
                 }
-                WaitAllExt(MT_Events.ToArray());
+                Task.WaitAll(Tasks.ToArray());
                 return true;
             }
             catch (Exception exception)
@@ -102,9 +104,9 @@ namespace Backup_Utility
             DirectoryInfo[] foldersToSave = folderToCopy.GetDirectories();
             foreach (FileInfo file in filesToSave)
             {
-                MT_Events.Add(new ManualResetEvent(false));
-                int index = MT_Events.Count - 1;
-                ThreadPool.QueueUserWorkItem(state => { file.CopyTo(Path.Combine(backupDir.FullName, file.Name)); MT_Events[(int)state].Set(); }, index);
+                Tasks.Add(new Task(() => { return; }));
+                int index = Tasks.Count - 1;
+                ThreadPool.QueueUserWorkItem(state => { file.CopyTo(Path.Combine(backupDir.FullName, file.Name)); Tasks[(int)state].RunSynchronously(); }, index);
             }
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirMT(subDirs, backupDir);
@@ -131,7 +133,9 @@ namespace Backup_Utility
                 WaitHandle.WaitAll(trimmedWaitHandles);
             }
         }
+        #endregion
 
+        #region Backup ST:
         private static bool BackupST()
         {
             try
@@ -182,6 +186,7 @@ namespace Backup_Utility
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirST(subDirs, backupDir);
         }
+        #endregion
 
         private static DirectoryInfo CreateNewFolder(string path)
         {
