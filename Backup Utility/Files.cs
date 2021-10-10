@@ -101,8 +101,10 @@ namespace Backup_Utility
 
         private void RemoveBtn_Click(object sender, EventArgs e)
         {
+            if (FilesListBox.SelectedItem is null)
+                return;
             string selectedItem = FilesListBox.SelectedItem.ToString();
-            if (selectedItem is null || selectedItem.Equals(filesItem) || selectedItem.Equals(foldersItem))
+            if (selectedItem.Equals(filesItem) || selectedItem.Equals(foldersItem))
                 return;
             DialogResult confirmResult = MessageBox.Show("Are you sure you want to remove this item?", "Confirm removal", MessageBoxButtons.YesNo);
             if (confirmResult != DialogResult.Yes)
