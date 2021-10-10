@@ -9,6 +9,7 @@ namespace Backup_Utility
     static class FileManager
     {
         private static List<ManualResetEvent> MT_Events = new List<ManualResetEvent>();
+        private static List<Task> Tasks = new List<Task>();
 
         #region Public Attributes:
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
@@ -51,11 +52,11 @@ namespace Backup_Utility
                 return BackupST();
         }
 
+        #region Backup MT:
         private static bool BackupMT()
         {
             try
             {
-                MT_Events = new List<ManualResetEvent>();
                 DirectoryInfo presetDir = CreateNewFolder(PresetManager.ConfigAndPresets.BackupFolderPath + @"\" + PresetManager.CurrentPreset.PresetName);
                 if (presetDir is null)
                     return false;
@@ -69,10 +70,13 @@ namespace Backup_Utility
                         ErrorLogger.ShowErrorText($"File '{file}' doesn't exist or was deleted, skipping file");
                         continue;
                     }
-                    FileInfo fileInfo = new FileInfo(file);
-                    MT_Events.Add(new ManualResetEvent(false));
-                    int index = MT_Events.Count - 1;
-                    ThreadPool.QueueUserWorkItem(state => { File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name); MT_Events[(int)state].Set(); }, index);
+                    Tasks.Add(new Task(() => { return; }));
+                    ThreadPool.QueueUserWorkItem(state =>
+                    {
+                        BackupAttributesForPassthrough obj = (BackupAttributesForPassthrough)state;
+                        obj.fileInfo.CopyTo(Path.Combine(obj.backupDir.FullName, obj.fileInfo.Name));
+                        Tasks[obj.index].RunSynchronously();
+                    }, new BackupAttributesForPassthrough(Tasks.Count - 1, new FileInfo(file), new DirectoryInfo(backupDir.FullName)));
                 }
                 foreach (string folder in FoldersToSave)
                 {
@@ -83,7 +87,8 @@ namespace Backup_Utility
                     }
                     BackupAllInDirMT(new DirectoryInfo(folder), backupDir);
                 }
-                WaitAllExt(MT_Events.ToArray());
+                Task.WaitAll(Tasks.ToArray());
+                Tasks.Clear();
                 return true;
             }
             catch (Exception exception)
@@ -102,15 +107,19 @@ namespace Backup_Utility
             DirectoryInfo[] foldersToSave = folderToCopy.GetDirectories();
             foreach (FileInfo file in filesToSave)
             {
-                MT_Events.Add(new ManualResetEvent(false));
-                int index = MT_Events.Count - 1;
-                ThreadPool.QueueUserWorkItem(state => { file.CopyTo(Path.Combine(backupDir.FullName, file.Name)); MT_Events[(int)state].Set(); }, index);
+                Tasks.Add(new Task(() => { return; }));
+                ThreadPool.QueueUserWorkItem(state =>
+                {
+                    BackupAttributesForPassthrough obj = (BackupAttributesForPassthrough)state;
+                    obj.fileInfo.CopyTo(Path.Combine(obj.backupDir.FullName, obj.fileInfo.Name));
+                    Tasks[obj.index].RunSynchronously();
+                }, new BackupAttributesForPassthrough(Tasks.Count - 1, new FileInfo(file.FullName), new DirectoryInfo(backupDir.FullName)));
             }
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirMT(subDirs, backupDir);
         }
 
-        private static void WaitAllExt(WaitHandle[] waitHandles)
+        private static void WaitAllHandlesExtended(WaitHandle[] waitHandles)//! Remove or go back to it?
         {
             const int waitAllArrayLimit = 64;
             var prevEndIndex = -1;
@@ -131,7 +140,9 @@ namespace Backup_Utility
                 WaitHandle.WaitAll(trimmedWaitHandles);
             }
         }
+        #endregion
 
+        #region Backup ST:
         private static bool BackupST()
         {
             try
@@ -150,7 +161,7 @@ namespace Backup_Utility
                         continue;
                     }
                     FileInfo fileInfo = new FileInfo(file);
-                    File.Copy(fileInfo.FullName, backupDir.FullName + @"\" + fileInfo.Name);
+                    fileInfo.CopyTo(Path.Combine(backupDir.FullName, fileInfo.Name));
                 }
                 foreach (string folder in FoldersToSave)
                 {
@@ -182,6 +193,7 @@ namespace Backup_Utility
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirST(subDirs, backupDir);
         }
+        #endregion
 
         private static DirectoryInfo CreateNewFolder(string path)
         {
@@ -189,5 +201,19 @@ namespace Backup_Utility
             return (dir is null || dir.FullName is null) ? null : dir;
         }
         #endregion
+    }
+
+    class BackupAttributesForPassthrough
+    {
+        public int index;
+        public FileInfo fileInfo;
+        public DirectoryInfo backupDir;
+
+        public BackupAttributesForPassthrough(int index, FileInfo fileInfo, DirectoryInfo backupDir)
+        {
+            this.index = index;
+            this.fileInfo = fileInfo;
+            this.backupDir = backupDir;
+        }
     }
 }
