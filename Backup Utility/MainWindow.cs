@@ -151,7 +151,15 @@ namespace Backup_Utility
         private void newPresetBtn_Click(object sender, EventArgs e)
         {
             InputForm inputForm = new InputForm() { description = "Name your new Preset:", title = "Preset" };
-            inputForm.ShowDialog(this);
+            try
+            {
+                inputForm.ShowDialog(this);
+            }
+            catch (Exception expection)
+            {
+                string errorText = "An error occurred.";
+                ErrorLogger.ShowErrorTextWithExceptionMessage(errorText, expection);
+            }
             if (inputForm.DialogResult != DialogResult.OK)
                 return;
             if (!PresetManager.CheckIfNameIsValid(inputForm.Input))
@@ -163,6 +171,7 @@ namespace Backup_Utility
             inputForm.Dispose();
             SetPresetsComboBox();
             PresetManager.Save();
+
         }
 
         private void deletePresetBtn_Click(object sender, EventArgs e)
@@ -219,8 +228,16 @@ namespace Backup_Utility
         #region Files:
         private void FilesBtn_Click(object sender, EventArgs e)
         {
-            Files filesForm = new Files() { Text = $"{PresetManager.CurrentPreset.PresetName} - Files" };
-            filesForm.ShowDialog(this);
+            try
+            {
+                Files filesForm = new Files() { Text = $"{PresetManager.CurrentPreset.PresetName} - Files" };
+                filesForm.ShowDialog(this);
+            }
+            catch (Exception expection)
+            {
+                string errorText = "An error occurred.";
+                ErrorLogger.ShowErrorTextWithExceptionMessage(errorText, expection);
+            }
         }
         #endregion
 
