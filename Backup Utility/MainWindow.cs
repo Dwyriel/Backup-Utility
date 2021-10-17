@@ -82,9 +82,9 @@ namespace Backup_Utility
 
         private void SetBackupStatus(string labelText, bool backupInProgress, bool buttonsEnabled)
         {
-            HideStatusLabelTimer("Failed");
-            BackupInProgress = false;
-            SetButtonsEnabledAttribute(true);
+            HideStatusLabelTimer(labelText);
+            BackupInProgress = backupInProgress;
+            SetButtonsEnabledAttribute(buttonsEnabled);
         }
 
         private bool CheckBackupFolder()
