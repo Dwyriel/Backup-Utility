@@ -70,13 +70,16 @@ namespace Backup_Utility
                         ErrorLogger.ShowErrorText($"File '{file}' doesn't exist or was deleted, skipping file");
                         continue;
                     }
-                    Tasks.Add(new Task(() => { return; }));
+                    Tasks.Add(new Task(obj =>
+                    {
+                        BackupAttributesForPassthrough backupAttributes = (BackupAttributesForPassthrough)obj;
+                        backupAttributes.fileInfo.CopyTo(Path.Combine(backupAttributes.backupDir.FullName, backupAttributes.fileInfo.Name));
+                    }, new BackupAttributesForPassthrough(new FileInfo(file), new DirectoryInfo(backupDir.FullName))));
                     ThreadPool.QueueUserWorkItem(state =>
                     {
-                        BackupAttributesForPassthrough obj = (BackupAttributesForPassthrough)state;
-                        obj.fileInfo.CopyTo(Path.Combine(obj.backupDir.FullName, obj.fileInfo.Name));
-                        Tasks[obj.index].RunSynchronously();
-                    }, new BackupAttributesForPassthrough(Tasks.Count - 1, new FileInfo(file), new DirectoryInfo(backupDir.FullName)));
+                        int i = (int)state;
+                        Tasks[i].RunSynchronously();
+                    }, Tasks.Count - 1);
                 }
                 foreach (string folder in FoldersToSave)
                 {
@@ -107,13 +110,16 @@ namespace Backup_Utility
             DirectoryInfo[] foldersToSave = folderToCopy.GetDirectories();
             foreach (FileInfo file in filesToSave)
             {
-                Tasks.Add(new Task(() => { return; }));
+                Tasks.Add(new Task(obj =>
+                {
+                    BackupAttributesForPassthrough backupAttributes = (BackupAttributesForPassthrough)obj;
+                    backupAttributes.fileInfo.CopyTo(Path.Combine(backupAttributes.backupDir.FullName, backupAttributes.fileInfo.Name));
+                }, new BackupAttributesForPassthrough(new FileInfo(file.FullName), new DirectoryInfo(backupDir.FullName))));
                 ThreadPool.QueueUserWorkItem(state =>
                 {
-                    BackupAttributesForPassthrough obj = (BackupAttributesForPassthrough)state;
-                    obj.fileInfo.CopyTo(Path.Combine(obj.backupDir.FullName, obj.fileInfo.Name));
-                    Tasks[obj.index].RunSynchronously();
-                }, new BackupAttributesForPassthrough(Tasks.Count - 1, new FileInfo(file.FullName), new DirectoryInfo(backupDir.FullName)));
+                    int i = (int)state;
+                    Tasks[i].RunSynchronously();
+                }, Tasks.Count - 1);
             }
             foreach (DirectoryInfo subDirs in foldersToSave)
                 BackupAllInDirMT(subDirs, backupDir);
@@ -205,13 +211,11 @@ namespace Backup_Utility
 
     class BackupAttributesForPassthrough
     {
-        public int index;
         public FileInfo fileInfo;
         public DirectoryInfo backupDir;
 
-        public BackupAttributesForPassthrough(int index, FileInfo fileInfo, DirectoryInfo backupDir)
+        public BackupAttributesForPassthrough(FileInfo fileInfo, DirectoryInfo backupDir)
         {
-            this.index = index;
             this.fileInfo = fileInfo;
             this.backupDir = backupDir;
         }
