@@ -15,7 +15,7 @@ namespace Backup_Utility
         public static List<string> FilesToSave { get { return PresetManager.CurrentPreset.FilesToSave; } }
         public static List<string> FoldersToSave { get { return PresetManager.CurrentPreset.FoldersToSave; } }
         public static uint BackupNumber { get { return PresetManager.CurrentPreset.BackupNumber; } set { PresetManager.CurrentPreset.BackupNumber = value; } }
-        public static bool isThereItemsToSave { get { return FilesToSave.Count > 0 || FoldersToSave.Count > 0; } }
+        public static bool IsThereItemsToSave { get { return FilesToSave.Count > 0 || FoldersToSave.Count > 0; } }
         #endregion
 
         #region Methods:

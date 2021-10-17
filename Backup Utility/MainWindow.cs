@@ -263,7 +263,7 @@ namespace Backup_Utility
                 SetBackupStatus("Failed", false, true);
                 return;
             }
-            if (!FileManager.isThereItemsToSave)
+            if (!FileManager.IsThereItemsToSave)
             {
                 MessageBox.Show("No files to backup, Select files first");
                 SetBackupStatus("Failed", false, true);
