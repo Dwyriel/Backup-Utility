@@ -36,7 +36,7 @@ namespace Backup_Utility
 
         private void SetButtonsState()
         {
-            bool shouldEnable = FileManager.isThereItemsToSave;
+            bool shouldEnable = FileManager.IsThereItemsToSave;
             RemoveBtn.Enabled = shouldEnable;
             ClearBtn.Enabled = shouldEnable;
         }

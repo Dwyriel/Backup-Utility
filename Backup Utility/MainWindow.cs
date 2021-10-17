@@ -82,9 +82,9 @@ namespace Backup_Utility
 
         private void SetBackupStatus(string labelText, bool backupInProgress, bool buttonsEnabled)
         {
-            HideStatusLabelTimer("Failed");
-            BackupInProgress = false;
-            SetButtonsEnabledAttribute(true);
+            HideStatusLabelTimer(labelText);
+            BackupInProgress = backupInProgress;
+            SetButtonsEnabledAttribute(buttonsEnabled);
         }
 
         private bool CheckBackupFolder()
@@ -263,7 +263,7 @@ namespace Backup_Utility
                 SetBackupStatus("Failed", false, true);
                 return;
             }
-            if (!FileManager.isThereItemsToSave)
+            if (!FileManager.IsThereItemsToSave)
             {
                 MessageBox.Show("No files to backup, Select files first");
                 SetBackupStatus("Failed", false, true);
