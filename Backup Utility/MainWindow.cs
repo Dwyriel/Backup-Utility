@@ -57,12 +57,13 @@ namespace Backup_Utility
                 presetComboBox.Items.Add(preset.PresetName);
             if (presetComboBox.Items.Count > 0)
                 presetComboBox.SelectedIndex = PresetManager.ConfigAndPresets.CurrentPresetIndex;
-            CheckForPreset();
+            SetEnableOnPresetRelatedButtons();
         }
 
-        private void CheckForPreset()
+        private void SetEnableOnPresetRelatedButtons()
         {
             FilesBtn.Enabled = PresetManager.ConfigAndPresets.Presets.Count > 0;
+            deletePresetBtn.Enabled = PresetManager.ConfigAndPresets.Presets.Count > 0;
         }
 
         private void SetMultithreadedOption()
@@ -74,10 +75,9 @@ namespace Backup_Utility
         {
             presetComboBox.Enabled = isEnabled;
             newPresetBtn.Enabled = isEnabled;
-            deletePresetBtn.Enabled = isEnabled;
-            FilesBtn.Enabled = isEnabled;
             backupFolderSearchBtn.Enabled = isEnabled;
             backupFolderTxtBox.Enabled = isEnabled;
+            SetEnableOnPresetRelatedButtons();
         }
 
         private void SetBackupStatus(string labelText, bool backupInProgress, bool buttonsEnabled)
@@ -252,14 +252,14 @@ namespace Backup_Utility
             ShowStatusLabel("Working on it..");
             BackupInProgress = true;
             SetButtonsEnabledAttribute(false);
-            if (!CheckBackupFolder())
-            {
-                SetBackupStatus("Failed", false, true);
-                return;
-            }
             if (!PresetManager.PresetsExist)
             {
                 MessageBox.Show("Create a preset first");
+                SetBackupStatus("Failed", false, true);
+                return;
+            }
+            if (!CheckBackupFolder())
+            {
                 SetBackupStatus("Failed", false, true);
                 return;
             }
